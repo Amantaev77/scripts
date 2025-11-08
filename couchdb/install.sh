@@ -26,53 +26,53 @@ check_error() {
 
 # Обновляем систему и устанавливаем зависимости
 echo -e "${YELLOW}[1/5] Обновление системы и установка зависимостей...${NC}"
-sudo apt update
+apt update
 check_error "Ошибка при обновлении apt"
 
-sudo apt install -y curl apt-transport-https gnupg lsb-release
+apt install -y curl apt-transport-https gnupg lsb-release
 check_error "Ошибка при установке зависимостей"
 
 # Импортируем GPG-ключ CouchDB
 echo -e "${YELLOW}[2/5] Добавление GPG-ключа CouchDB...${NC}"
-curl -s https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
+curl -s https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
 check_error "Ошибка при импорте GPG-ключа"
 
 # Добавляем репозиторий CouchDB
 echo -e "${YELLOW}[3/5] Добавление репозитория CouchDB...${NC}"
 source /etc/os-release
-echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main" | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main" | tee /etc/apt/sources.list.d/couchdb.list >/dev/null
 check_error "Ошибка при добавлении репозитория"
 
 # Обновляем список пакетов
 echo -e "${YELLOW}[4/5] Обновление списка пакетов...${NC}"
-sudo apt update
+apt update
 check_error "Ошибка при обновлении списка пакетов"
 
 # Предварительная настройка через debconf для автоматической установки
 echo -e "${YELLOW}[5/5] Автоматическая установка CouchDB...${NC}"
-echo "couchdb couchdb/setup_mode select ${SETUP_MODE}" | sudo debconf-set-selections
-echo "couchdb couchdb/admin_username string ${ADMIN_USER}" | sudo debconf-set-selections
-echo "couchdb couchdb/admin_password password ${ADMIN_PASSWORD}" | sudo debconf-set-selections
-echo "couchdb couchdb/admin_password_again password ${ADMIN_PASSWORD}" | sudo debconf-set-selections
-echo "couchdb couchdb/bind_address string ${BIND_ADDRESS}" | sudo debconf-set-selections
+echo "couchdb couchdb/setup_mode select ${SETUP_MODE}" | debconf-set-selections
+echo "couchdb couchdb/admin_username string ${ADMIN_USER}" | debconf-set-selections
+echo "couchdb couchdb/admin_password password ${ADMIN_PASSWORD}" | debconf-set-selections
+echo "couchdb couchdb/admin_password_again password ${ADMIN_PASSWORD}" | debconf-set-selections
+echo "couchdb couchdb/bind_address string ${BIND_ADDRESS}" | debconf-set-selections
 
 # Устанавливаем CouchDB без интерактивных запросов
-sudo DEBIAN_FRONTEND=noninteractive apt install -y couchdb
+DEBIAN_FRONTEND=noninteractive apt install -y couchdb
 check_error "Ошибка при установке CouchDB"
 
 # Включаем автозагрузку
 echo -e "${YELLOW}Включение автозагрузки CouchDB...${NC}"
-sudo systemctl enable couchdb
+systemctl enable couchdb
 check_error "Ошибка при включении автозагрузки"
 
 # Запускаем сервис
 echo -e "${YELLOW}Запуск сервиса CouchDB...${NC}"
-sudo systemctl start couchdb
+systemctl start couchdb
 check_error "Ошибка при запуске CouchDB"
 
 # Проверяем статус
 echo -e "${YELLOW}Проверка статуса CouchDB...${NC}"
-sudo systemctl status couchdb
+systemctl status couchdb
 
 # Тестируем доступность
 sleep 2
