@@ -16,10 +16,8 @@ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://ap
 apt update
 
 # Автоматическая установка
-echo "couchdb couchdb/setup_mode select standalone" | debconf-set-selections
 echo "couchdb couchdb/admin_password password $ADMIN_PASSWORD" | debconf-set-selections
 echo "couchdb couchdb/admin_password_again password $ADMIN_PASSWORD" | debconf-set-selections
-echo "couchdb couchdb/bind_address string 127.0.0.1" | debconf-set-selections
 
 DEBIAN_FRONTEND=noninteractive apt install -y couchdb
 systemctl enable --now couchdb
