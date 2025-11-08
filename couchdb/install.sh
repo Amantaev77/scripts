@@ -1,4 +1,3 @@
-bash
 #!/bin/bash
 # quick_install_couchdb.sh
 
