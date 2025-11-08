@@ -11,8 +11,8 @@ echo -e "${YELLOW}=== Автоматическая установка CouchDB н
 
 # Параметры установки (измените при необходимости)
 ADMIN_USER="admin"
-ADMIN_PASSWORD="${COUCHDB_PASSWORD:-couchdb_password_123}"
-BIND_ADDRESS="127.0.0.1"
+ADMIN_PASSWORD="password"
+BIND_ADDRESS="0.0.0.0"
 BIND_PORT="5984"
 SETUP_MODE="standalone"  # или "clustered"
 
